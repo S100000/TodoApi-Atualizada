@@ -15,10 +15,9 @@ public class AuthorService : AuthorInterface
         ResponseModel<List<AuthorModel>> resp = new ResponseModel<List<AuthorModel>>();
         try
         {
-            var authors = await _context.Authors.ToListAsync();
+            var authors = await _context.Authors.ToListAsync();//
             resp.Data = authors;
             resp._message = "Todos os autores foram coletados!";
-            resp.Status = true;
             return resp; ;
         }
         catch (Exception ex)
@@ -34,8 +33,28 @@ public class AuthorService : AuthorInterface
         throw new NotImplementedException();
     }
 
-    public Task<ResponseModel<AuthorModel>> FindAuthorById(int idAuthor)
+    public async Task<ResponseModel<AuthorModel>> FindAuthorById(int idAuthor)
     {
-        throw new NotImplementedException();
+        ResponseModel<AuthorModel> resp = new ResponseModel<AuthorModel>();
+        try
+        {
+            var author = await _context.Authors.FirstOrDefaultAsync(authorBank => authorBank.Id == idAuthor); //entre no nosso banco, na tabela de autores,procure o primeiro com a informação id escrita.
+            
+            if(author == null)
+            {
+                resp._message = "Nenhum registro localizado.";
+                return resp;
+            }
+
+            resp.Data = author;
+            resp._message = "Autor localizado.";
+            return resp;
+        }
+        catch (Exception ex)
+        {
+            resp._message = ex.Message;
+            resp.Status = false;
+            return resp;
+        }
     }
 }

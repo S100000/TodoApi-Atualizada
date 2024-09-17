@@ -21,5 +21,12 @@ namespace TodoApi.Controllers
             var authors = await _authorInterface.AuthorsList();
             return Ok(authors);
         }
+
+        [HttpGet("FindAuthorById/{idAuthor}")]
+        public async Task<ActionResult<ResponseModel<AuthorModel>>> FindAuthorById(int idAuthor)
+        {
+            var author = await _authorInterface.FindAuthorById(idAuthor);
+            return Ok(author);
+        }
     }
 }
