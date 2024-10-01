@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TodoApi.Dto;
+using TodoApi.Dto.Author;
 using TodoApi.Models;
 using TodoApi.Services.Author;
 
@@ -48,14 +48,15 @@ namespace TodoApi.Controllers
         public async Task<ActionResult<ResponseModel<List<AuthorModel>>>> EditAuthor(EditauthorDto editAuthorDto)
         {
             var author = await _authorInterface.EditAuthor(editAuthorDto);
-            return Ok(editAuthorDto);
+            return Ok(author);
         }
 
         [HttpDelete("DeleteAuthor")]
-        public async Task<ActionResult<ResponseModel<List<AuthorModel>>>> DeleteAuthor(int idAuthor);
+        public async Task<ActionResult<ResponseModel<AuthorModel>>> DeleteAuthor(int idAuthor)
         {
             var author = await _authorInterface.DeleteAuthor(idAuthor);
-            return Ok(idAuthor);
+            return Ok(author);
         }
     }
 }
+

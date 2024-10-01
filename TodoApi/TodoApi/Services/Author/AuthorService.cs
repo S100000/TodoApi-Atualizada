@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TodoApi.Dto;
+using TodoApi.Dto.Author;
 using TodoApi.Models;
 
 namespace TodoApi.Services.Author;
@@ -18,7 +18,7 @@ public class AuthorService : AuthorInterface
         {
             var authors = await _context.Authors.ToListAsync();//
             resp.Data = authors;
-            resp._message = "Todos os autores foram coletados!";
+            resp._message = "All the authors were found";
             return resp; ;
         }
         catch (Exception ex)
@@ -71,6 +71,8 @@ public class AuthorService : AuthorInterface
             }
 
             _context.Remove(author);
+            await _context.SaveChangesAsync();
+
             resp.Data = await _context.Authors.ToListAsync();
             resp._message = "Author successfully  removed";
             return resp;
@@ -99,6 +101,8 @@ public class AuthorService : AuthorInterface
 
             author.Name = editAuthorDto.Name;
             author.LastName = editAuthorDto.LastName;
+            _context.Update(author);
+            await _context.SaveChangesAsync();
 
             resp.Data = await _context.Authors.ToListAsync();
             resp._message = "Author successfully edited";

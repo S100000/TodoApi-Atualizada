@@ -1,8 +1,7 @@
-﻿namespace TodoApi.Dto
+﻿namespace TodoApi.Dto.Author
 {
-    public class EditauthorDto
+    public class CreateAuthorDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
     }

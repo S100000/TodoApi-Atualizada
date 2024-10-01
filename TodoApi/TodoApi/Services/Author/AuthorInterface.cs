@@ -1,5 +1,5 @@
 ﻿using TodoApi.Models;
-using TodoApi.Dto;
+using TodoApi.Dto.Author;
 
 namespace TodoApi.Services.Author
 {
