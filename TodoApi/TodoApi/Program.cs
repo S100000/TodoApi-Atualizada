@@ -7,11 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<AuthorInterface, AuthorService>();//configurando os métodos implementados em AuthorInterface para serem implementeados em AuthorServices.
+builder.Services.AddScoped<AuthorInterface, AuthorService>();//configuring the methods implemented in AuthorInterface to be implemented in AuthorServices.
 
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));//adcionando a string de conexão do appsettings ao appdbcontext

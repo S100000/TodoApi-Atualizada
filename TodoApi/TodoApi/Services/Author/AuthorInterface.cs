@@ -1,4 +1,5 @@
 ﻿using TodoApi.Models;
+using TodoApi.Dto;
 
 namespace TodoApi.Services.Author
 {
@@ -7,6 +8,9 @@ namespace TodoApi.Services.Author
         Task<ResponseModel<List<AuthorModel>>> AuthorsList();
         Task<ResponseModel<AuthorModel>> FindAuthorById(int idAuthor);
         Task<ResponseModel<AuthorModel>> FindAuthorByBook(int idBook);
+        Task<ResponseModel<List<AuthorModel>>> CreateAuthor(CreateAuthorDto createAuthorDto);
+        Task<ResponseModel<List<AuthorModel>>> EditAuthor(EditauthorDto editAuthorDto);
+        Task<ResponseModel<List<AuthorModel>>> DeleteAuthor(int idAuthor);
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TodoApi.Dto;
 using TodoApi.Models;
 
 namespace TodoApi.Services.Author;
@@ -28,9 +29,112 @@ public class AuthorService : AuthorInterface
         }
     }
 
-    public Task<ResponseModel<AuthorModel>> FindAuthorByBook(int idBook)
+    public async Task<ResponseModel<List<AuthorModel>>> CreateAuthor(CreateAuthorDto createAuthorDto)
     {
-        throw new NotImplementedException();
+        ResponseModel<List<AuthorModel>> resp = new ResponseModel<List<AuthorModel>> ();
+
+        try
+        {
+            var author = new AuthorModel()
+            {
+                Name = createAuthorDto.Name,
+                LastName = createAuthorDto.LastName
+            };
+            _context.Authors.Add(author);
+            await _context.SaveChangesAsync();
+
+            resp.Data = await _context.Authors.ToListAsync();
+            resp._message = "Author successfully created";
+            return resp;
+        }
+        catch (Exception ex)
+        {
+            resp._message = ex.Message;
+            resp.Status = false;
+            return resp;
+        }
+    }
+
+    public async Task<ResponseModel<List<AuthorModel>>> DeleteAuthor(int idAuthor)
+    {
+        ResponseModel<List<AuthorModel>> resp = new ResponseModel<List<AuthorModel>>();
+
+        try
+        {
+
+            var author = await _context.Authors.FirstOrDefaultAsync(bankAuthor => bankAuthor.Id == idAuthor);
+
+            if(author == null)
+            {
+                resp._message = "no authors found";
+                return resp;
+            }
+
+            _context.Remove(author);
+            resp.Data = await _context.Authors.ToListAsync();
+            resp._message = "Author successfully  removed";
+            return resp;
+        }
+        catch(Exception ex) 
+        {
+            resp._message = ex.Message;
+            resp.Status = false;
+            return resp;
+        }
+    }
+
+    public async Task<ResponseModel<List<AuthorModel>>> EditAuthor(EditauthorDto editAuthorDto)
+    {
+        ResponseModel<List<AuthorModel>> resp = new ResponseModel<List<AuthorModel>>();
+        try
+        {
+            var author = await _context.Authors.FirstOrDefaultAsync(bankAuthor => bankAuthor.Id == editAuthorDto.Id);
+
+
+            if (author == null)
+            {
+                resp._message = "no authors found";
+                return resp;
+            }
+
+            author.Name = editAuthorDto.Name;
+            author.LastName = editAuthorDto.LastName;
+
+            resp.Data = await _context.Authors.ToListAsync();
+            resp._message = "Author successfully edited";
+
+            return resp;
+        }
+        catch (Exception ex)
+        {
+            resp._message = ex.Message;
+            resp.Status = false;
+            return resp;
+        }
+    }
+
+    public async Task<ResponseModel<AuthorModel>> FindAuthorByBook(int idBook)
+    {
+        ResponseModel<AuthorModel> resp = new ResponseModel<AuthorModel>();
+        try
+        {
+            var book = await _context.Books.Include(a => a.Author).FirstOrDefaultAsync(BookBank => BookBank.Id == idBook);
+            
+            if(book == null)
+            {
+                resp._message = "nennhum autor encontrado.";
+                return resp;
+            }
+
+            resp.Data = book.Author;
+            return resp;
+        }
+        catch (Exception ex)
+        {
+            resp._message = ex.Message;
+            resp.Status = false;
+            return resp;
+        }
     }
 
     public async Task<ResponseModel<AuthorModel>> FindAuthorById(int idAuthor)
@@ -57,4 +161,6 @@ public class AuthorService : AuthorInterface
             return resp;
         }
     }
+
+
 }
