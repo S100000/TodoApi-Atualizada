@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TodoApi.Dto.Book;
 using TodoApi.Models;
 using TodoApi.Services.Book;
 
@@ -29,5 +30,18 @@ namespace TodoApi.Controllers
             return Ok(book);
         }
 
-    }
+        [HttpGet("GetBookByAuthor")]
+        public async Task<ActionResult<ResponseModel<List<BookModel>>>> GetBookByAuthor(int idAuthor)
+        {
+            var book = await _bookInterface.GetBookByAuthor(idAuthor);
+            return Ok(book);
+        }
+
+        [HttpPost("CreateBook")]
+        public async Task<ActionResult<ResponseModel<List<BookModel>>>> CreateBook(CreateBookDto createBookDto)
+        {
+            var book = await _bookInterface.CreateBook(createBookDto);
+            return Ok(book);
+        }
+    } 
 }

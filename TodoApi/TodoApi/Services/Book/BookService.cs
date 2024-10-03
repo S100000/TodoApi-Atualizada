@@ -31,9 +31,38 @@ namespace TodoApi.Services.Book
             }
         }
 
-        public Task<ResponseModel<List<BookModel>>> CreateBook(CreateBookDto createBookDto)
+        public async Task<ResponseModel<List<BookModel>>> CreateBook(CreateBookDto createBookDto)
         {
-            throw new NotImplementedException();
+            ResponseModel<List<BookModel>> resp = new ResponseModel<List<BookModel>>();
+            try
+            {
+                var author = await _context.Authors.FirstOrDefaultAsync(authorBank => authorBank.Id == createBookDto.Author.Id);
+
+                if (author == null)
+                {
+                    resp._message = "Auhtor not found";
+                    return resp;
+                }
+
+                var book = new BookModel()
+                {
+                    Name = createBookDto.Name,
+                    Author = author
+                };
+                _context.Add(book);
+                await _context.SaveChangesAsync();
+
+                resp.Data = await _context.Books.Include(a => a.Author).ToListAsync();
+                resp._message = "Book successfuly created";
+
+                return resp;
+            }
+            catch (Exception ex)
+            {
+                resp._message = ex.Message;
+                resp.Status = false;
+                return resp;
+            }
         }
 
         public Task<ResponseModel<List<BookModel>>> DeleteBook(int idBook)
@@ -46,9 +75,29 @@ namespace TodoApi.Services.Book
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<List<BookModel>>> GetBookByAuthor(int idAuthor)
+        public async Task<ResponseModel<List<BookModel>>> GetBookByAuthor(int idAuthor)
         {
-            throw new NotImplementedException();
+            ResponseModel<List<BookModel>> resp = new ResponseModel<List<BookModel>>();
+            try
+            {
+                var book = await _context.Books.Include(a => a.Author).Where(bankAuthor => bankAuthor.Author.Id == idAuthor).ToListAsync();
+                if (book == null)
+                {
+                    resp._message = "Book Not Found";
+                    return resp;
+                }
+
+                resp.Data = book;
+                resp._message = "Book successfully found";
+
+                return resp;
+            }
+            catch (Exception ex)
+            {
+                resp._message = ex.Message;
+                resp.Status = false;
+                return resp;
+            }
         }
 
         public async Task<ResponseModel<BookModel>> GetBookById(int idBook)

@@ -126,7 +126,7 @@ public class AuthorService : AuthorInterface
             
             if(book == null)
             {
-                resp._message = "nennhum autor encontrado.";
+                resp._message = "Author not found";
                 return resp;
             }
 
